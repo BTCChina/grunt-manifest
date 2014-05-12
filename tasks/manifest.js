@@ -82,17 +82,29 @@ module.exports = function (grunt) {
       // add files to explicit cache
       if (files) {
         files.forEach(function (item) {
-          if (options.process) {
-            contents += encodeURI(options.process(item)) + '\n';
-          } else {
-            contents += encodeURI(item) + '\n';
-          }
+            //BTCChina customization
+            if (options.cdnAssets === true) {
+                //don't rewrite .html URLS
+                if((new RegExp('.html')).test(item)){
+                    contents += encodeURI(item) + '\n';
+                }
+                else{
+                    contents += encodeURI(options.cdnUrl+item) + '\n';
+                }
+            }
+            else{
+                if (options.process) {
+                    contents += encodeURI(options.process(item)) + '\n';
+                } else {
+                    contents += encodeURI(item) + '\n';
+                }
+                // hash file contents
+                if (options.hash) {
+                  grunt.verbose.writeln('Hashing ' + path.join(options.basePath, item));
+                  hasher.update(grunt.file.read(path.join(options.basePath, item)), 'binary');
+                }
+            }
 
-          // hash file contents
-          if (options.hash) {
-            grunt.verbose.writeln('Hashing ' + path.join(options.basePath, item));
-            hasher.update(grunt.file.read(path.join(options.basePath, item)), 'binary');
-          }
         });
       }
 

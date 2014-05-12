@@ -134,6 +134,8 @@ grunt.initConfig({
   manifest: {
     generate: {
       options: {
+        cdnAssets: true,
+        cdnUrl: 'http://some.cdnurl.com',
         basePath: '../',
         cache: ['js/app.js', 'css/style.css'],
         network: ['http://*', 'https://*'],
